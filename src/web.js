@@ -3,6 +3,7 @@ const debug = require('debug')('node-cba-netbank');
 const fs = require('mz/fs');
 const isString = require('lodash/isString');
 const request = require('request-promise');
+//const needle = request('needle');
 const truncate = require('lodash/truncate');
 
 // Initialisation
@@ -37,6 +38,7 @@ function doRequest(req, params = {}) {
   if (debug.enabled) {
     debug(`${myParams.method} ${myParams.url.substring(0, 80)}...`);
     debug(`headers => ${JSON.stringify(shorten(myParams.headers))}`);
+
     if (myParams.method === 'POST') {
       debug(`form => ${JSON.stringify(shorten(myParams.form))}`);
     }
@@ -61,6 +63,7 @@ function doRequest(req, params = {}) {
           2,
         ),
       );
+      debug(`cookies => ${JSON.stringify(response.cookies)}`);
       fs.writeFile(`log/${sequence}-3-response-body.html`, response.body);
     }
     return { url: response.request.href, headers: response.headers, body: response.body };

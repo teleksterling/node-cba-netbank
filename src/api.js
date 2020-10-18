@@ -44,8 +44,17 @@ class API {
             }),
           }))
         .then(resp => this.refreshBase(resp))
+        .then(parser.parseForm)
+        .then(resp =>
+          this.web.post({
+            url: 'https://www.commbank.com.au/retail/netbank/identity/signin-oidc',
+            form: resp.form,
+          }))
         //  parse the home page to retrieve the accounts list
-        .then(parser.parseHomePage)
+        .then(resp =>
+          this.web.get(this.getUrl('retail/netbank/api/home/v1/accounts')))
+        .then(resp => this.refreshBase(resp))
+        .then(parser.parseAccountList)
     );
   }
 
@@ -65,7 +74,36 @@ class API {
     debug(`getTransactionHistory(account: ${account.name} [${account.number}] => ${account.available})`);
     //  retrieve post form and key for the given account
     return this.web
-      .get(this.getUrl(account.link))
+      .get(account.link)
+      // .then((resp) => {
+      //   if (resp.location) {
+      //     return this.web.get(resp.location);
+      //   }
+      // })
+      .then(parser.parseForm)
+      .then(resp =>
+           this.web.post({
+               url: 'https://www.my.commbank.com.au/netbank/UserIdentity/signin-oidc',
+               form: resp.form,
+           }))
+      // .then(resp =>
+      //   this.web.post({
+      //     url: this.getUrl(PATH.LOGON),
+        //         form: Object.assign({}, resp.form, {
+        //
+        //             //  and make JS detector happy
+        //             JS: 'E',
+        //         }),
+        //      }))
+
+        // .then(resp =>
+        //   this.web.post({
+        //     url: this.getUrl(PATH.LOGON),
+        //         form: Object.assign({}, resp.form, {
+        //             //  and make JS detector happy
+        //             JS: 'E',
+        //         }),
+        //      }))
       .then(parser.parseTransactionPage)
       .then(resp => this.refreshBase(resp))
       .then((resp) => {

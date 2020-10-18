@@ -193,36 +193,25 @@ function parseViewState(resp) {
 // }
 function parseAccountList(resp) {
   return new Promise((resolve, reject) => {
-    const $ = cheerio.load(resp.body);
-    const accountRows = $('.main_group_account_row');
+    const accountRows = JSON.parse(resp.body).accounts;
 
     if (!accountRows || accountRows.length === 0) {
       return reject(new Error('Cannot find account list.'));
     }
 
     const accounts = [];
-    accountRows.each((index, elem) => {
+    accountRows.forEach((elem) => {
       try {
-        const $$ = cheerio.load(elem);
         const account = {
-          name: $$('.NicknameField .left a')
-            .text()
-            .trim(),
-          link: $$('.NicknameField .left a').attr('href'),
-          bsb: $$('.BSBField .text')
-            .text()
-            .replace(/\s+/g, '')
-            .trim(),
-          account: $$('.AccountNumberField .text')
-            .text()
-            .replace(/\s+/g, '')
-            .trim(),
-          balance: parseCurrencyHtml($$('.AccountBalanceField')),
-          available: parseCurrencyHtml($$('.AvailableFundsField')),
+          name: elem.displayName,
+          link: elem.link.url,
+          bsb: elem.number.slice(0, 6),
+          account: elem.number.slice(6),
+          number: elem.number,
+          balance: elem.balance.length > 0 ? elem.balance[0].amount : 0,
+          available: elem.availableFunds.length > 0 ? elem.availableFunds[0].amount : 0,
+          type: elem.productCode,
         };
-        //  Assemble the `bsb` and `account` to construct `number`
-        account.number = `${account.bsb}${account.account}`;
-        account.type = `${/ACCOUNT_PRODUCT_TYPE=(\w+)/.exec(account.link)[1]}`;
         //  push to the final account list if it's valid
         if (account.name && account.link && account.account) {
           accounts.push(account);
