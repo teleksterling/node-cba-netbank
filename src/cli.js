@@ -83,7 +83,7 @@ const myArgv = yargs
         default: 'json',
         describe: 'the output file format',
         type: 'string',
-        choices: ['json', 'csv', 'qif', 'aus.qif', 'us.qif', 'ofx'],
+        choices: ['json', 'csv', 'qif', 'aus.qif', 'us.qif'],
       },
     },
     (argv) => {
@@ -121,9 +121,9 @@ const myArgv = yargs
               case 'us.qif':
                 content = serializer.qif(history.transactions, 'us');
                 break;
-              case 'ofx':
-                content = serializer.ofx(history.transactions, account, argv.from, argv.to);
-                break;
+              // case 'ofx':
+              //   content = serializer.ofx(history.transactions, account, argv.from, argv.to);
+              //   break;
             }
             fs.writeFile(filename, content, (error) => {
               if (error) {

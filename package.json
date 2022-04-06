@@ -6,9 +6,9 @@
   "license": "Apache-2.0",
   "homepage": "https://github.com/twang2218/node-cba-netbank",
   "bugs": "https://github.com/twang2218/node-cba-netbank/issues",
-  "main": "dist/api.js",
+  "main": "src/api.js",
   "bin": {
-    "cba-netbank": "dist/cli.js"
+    "cba-netbank": "src/cli.js"
   },
   "directories": {
     "lib": "./dist"
@@ -21,11 +21,10 @@
     "easy-table": "^1.1.1",
     "inquirer": "^5.1.0",
     "lodash": "^4.17.5",
-    "moment-timezone": "^0.5.14",
+    "moment-timezone": "^0.5.34",
     "mz": "^2.7.0",
-    "ofx": "^0.4.0",
-    "request": "^2.83.0",
-    "request-promise": "^4.2.2",
+    "request": "^2.88.2",
+    "request-promise": "^4.2.6",
     "yargs": "^11.0.0"
   },
   "devDependencies": {
@@ -45,8 +44,8 @@
     "strip-ansi": "^4.0.0"
   },
   "scripts": {
-    "start": "node dist/cli.js",
-    "start-debug": "DEBUG=node-cba-netbank yarn start",
+    "start": "node src/cli.js ui -u 12345678 -p xxxx",
+    "start-debug": "set DEBUG=node-cba-netbank yarn start",
     "build": "babel src -d dist",
     "eslint": "eslint src test",
     "prepare": "yarn build",
@@ -57,7 +56,7 @@
     "coveralls": "cat ./coverage/lcov.info | coveralls",
     "clean": "rm -rf ./log/* ./coverage ./dist"
   },
-  "repository": "twang2218/node-cba-netbank",
+  "repository": "teleksterling/node-cba-netbank",
   "keywords": [
     "api",
     "bank",

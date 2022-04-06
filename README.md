@@ -59,7 +59,7 @@ Options:
   -o, --output    output file name
                  [string] [default: "[<name>](<number>) [<from> to <to>].<ext>"]
   --format        the output file format
-  [string] [choices: "json", "csv", "qif", "aus.qif", "us.qif", "ofx"] [default:
+  [string] [choices: "json", "csv", "qif", "aus.qif", "us.qif"] [default:
                                                                          "json"]
 ```
 
